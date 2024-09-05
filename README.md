@@ -7,7 +7,7 @@ Install Nodejs and MongoDB.
 ```bash
 git clone https://github.com/fdxx/pagecounter
 cd pagecounter
-node install
+npm install
 
 ## Start
 node index.js
