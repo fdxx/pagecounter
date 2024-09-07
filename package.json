@@ -1,0 +1,22 @@
+{
+  "name": "pagecounter",
+  "description": "https://github.com/fdxx/pagecounter",
+  "version": "0.2",
+  "author": "fdxx",
+  "license": "GPLv3",
+  "type": "module",
+  "homepage": "https://github.com/fdxx/pagecounter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fdxx/pagecounter.git"
+  },
+  "scripts": {
+    "deploy": "wrangler deploy --minify"
+  },
+  "dependencies": {
+    "hono": "^4.5.11"
+  },
+  "devDependencies": {
+    "wrangler": "^3.75.0"
+  }
+}

@@ -1,0 +1,8 @@
+name = "pagecounter"
+main = "./index.js"
+compatibility_date = "2024-09-07"
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "<your-database-name>"
+database_id = "<unique-ID-for-your-database>"
