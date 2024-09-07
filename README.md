@@ -1,7 +1,7 @@
 ## About
 PageCounter is an API for tracking page views, deployed using [Cloudflare Workers](https://developers.cloudflare.com/workers/) and [Cloudflare D1](https://developers.cloudflare.com/d1/).
 
-If you want to self-host, check out the self-host branch.
+If you want to self-host, check out the [self-host](https://github.com/fdxx/pagecounter/tree/self-host) branch.
 
 ## Deploy
 ```bash

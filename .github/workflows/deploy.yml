@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Getting own repository
+        uses: actions/checkout@v4
+        with:
+          path: src
+
+      - name: Insert variables
+        working-directory: src
+        run: |
+          sed -i "s/<your-database-name>/${{ vars.DATABASE_NAME }}/" wrangler.toml
+          sed -i "s/<unique-ID-for-your-database>/${{ vars.DATABASE_ID }}/" wrangler.toml
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          workingDirectory: src
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+
+          
