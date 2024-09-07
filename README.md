@@ -1,8 +1,9 @@
 ## About
-PageCounter is a [Nodejs](https://nodejs.org/) based API for tracking pageviews. It uses [MongoDB](https://www.mongodb.com/) or MySQL to store per-page visit data and allows updating and getting pageviews with a simple POST request.
+PageCounter is an API for tracking page views, self-host plan, Use MongoDB or MySQL to store data.
+
+deployed using Cloudflare Workers and Cloudflare D1 in [main](https://github.com/fdxx/pagecounter) branch.
 
 ## Run
-Install Nodejs and MongoDB.
 
 ```bash
 git clone https://github.com/fdxx/pagecounter
@@ -55,5 +56,5 @@ curl -X POST http://127.0.0.1:3005/pageviews -H "Content-Type: application/json"
 ```
 ### Response
 ```json
-{"_id":"66d47f4f8c5d7381b5f7fcd6","domain":"exp.com","path":"/blog/","count":18,"__v":0}
+{"ret":"OK","data":{"_id":1,"domain":"exp.com","path":"/blog/","count":1}}
 ```

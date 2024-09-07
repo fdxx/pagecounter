@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import mysql from 'mysql2/promise';
-import express from 'express';
-import cors from 'cors';
+import { serve } from '@hono/node-server';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 
 const MONGODB = 1;
 const MYSQL = 2;
@@ -25,7 +26,7 @@ class Database {
 			this.type = MYSQL;
 			this.dburl = `${dburl}?multipleStatements=true`;
 		}
-		
+
 		else {
 			this.type = MYSQL;
 			console.log("Unknown database type!");
@@ -47,22 +48,28 @@ class Database {
 		}
 	}
 
-	async Query(req, res) {
+	async Query(c) {
+		const body = await c.req.json();
+		const domain = body.domain;
+		const path = body.path;
+
+		if (!domain || !path) {
+			return c.json({ ret: "Missing domain or path" }, 400);
+		}
+
 		if (this.type === MONGODB) {
-			const result = await this.PageViews.findOneAndUpdate(
-				{ domain: req.body.domain, path: req.body.path },
+			const results = await this.PageViews.findOneAndUpdate(
+				{ domain: domain, path: path },
 				{ $inc: { count: 1 } },
 				{ new: true, upsert: true }
 			);
-			return res.status(200).json(result);
+			return c.json({ ret: "OK", data: results }, 200);
 		}
 		else if (this.type === MYSQL) {
-			const domain = req.body.domain;
-			const path = req.body.path;
 			const query = `INSERT INTO pageviews (domain, path, count) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE count = count + 1;
 				SELECT * FROM pageviews WHERE domain = ? AND path = ?`;
 			const [results] = await this.connection.query(query, [domain, path, domain, path]);
-			return res.status(200).json(results[1][0]);
+			return c.json({ ret: "OK", data: results[1][0] }, 200);
 		}
 	}
 }
@@ -80,21 +87,24 @@ async function main() {
 	const database = new Database(dburl);
 	await database.Connection();
 
-	const app = express();
-	app.use(express.json());
-	app.use(cors());
-	app.post('/pageviews', database.Query.bind(database));
-
-	const server = app.listen(port, () => {
-		console.log(`Server is running on port: ${port}`);
+	const app = new Hono();
+	app.use('/*', cors());
+	app.get("/", (c) => {
+		return c.text("Hello World");
 	});
 
+	app.post('/pageviews', database.Query.bind(database));
+
+	const server = serve({
+		fetch: app.fetch,
+		port: port,
+	});
+
+	console.log(`Server is running on port: ${port}`);
+	
 	process.on('SIGINT', () => closeServer(server));
 	process.on('SIGTERM', () => closeServer(server));
 	process.on('SIGHUP', () => closeServer(server));
 }
 
-main().catch(err => {
-	console.error(err);
-	process.exit(1);
-});
+main().catch(err => console.error(err));
