@@ -1,5 +1,5 @@
 ## About
-PageCounter is a [Nodejs](https://nodejs.org/) based API for tracking pageviews. It uses [MongoDB](https://www.mongodb.com/) to store per-page visit data and allows updating and getting pageviews with a simple POST request.
+PageCounter is a [Nodejs](https://nodejs.org/) based API for tracking pageviews. It uses [MongoDB](https://www.mongodb.com/) or MySQL to store per-page visit data and allows updating and getting pageviews with a simple POST request.
 
 ## Run
 Install Nodejs and MongoDB.
@@ -14,14 +14,19 @@ node index.js
 ```
 
 ## Environment variables
-- **DBURI**: Specify database url. default value `mongodb://127.0.0.1:27017/pagecounter`
+- **DBURL**: Specify database url. default value `mongodb://127.0.0.1:27017/pagecounter`
 - **PORT**: Specify the service port. default value `3005`
 
 Example:
 
 ```bash
-export DBURI='mongodb://user:pwd@host/mydatabase'
+## use MongoDB
+export DBURL='mongodb://user:pwd@host/mydatabase'
 export PORT=3000
+node index.js
+
+## use MySQL
+export DBURL='mysql://user:pwd@host/mydatabase'
 node index.js
 ```
 
